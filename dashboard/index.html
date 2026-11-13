@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>RunLedger</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232f54c9'/%3E%3Cpath d='M9 10h14M9 16h14M9 22h9' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#detail">Skip to run details</a>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">RunLedger</span>
+    </div>
+    <p class="db-chip" id="db-chip"><span class="db-chip-label">Read-only</span><span class="db-chip-path" id="db-path">Connecting…</span></p>
+    <div class="topbar-actions">
+      <span class="updated" id="updated" aria-live="polite"></span>
+      <button type="button" class="btn" id="refresh">
+        <span class="icon icon-refresh" aria-hidden="true"></span><span>Refresh</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="layout" id="layout" data-view="list">
+    <aside class="sidebar" aria-labelledby="history-heading">
+      <h2 class="visually-hidden" id="history-heading">Run history</h2>
+      <form class="filters" id="filters" role="search">
+        <div class="field field-search">
+          <label for="search" class="visually-hidden">Search prompts, answers and repositories</label>
+          <span class="icon icon-search" aria-hidden="true"></span>
+          <input type="search" id="search" name="q" placeholder="Search prompts and answers" autocomplete="off" spellcheck="false" maxlength="500">
+          <kbd class="kbd-hint" aria-hidden="true">/</kbd>
+        </div>
+        <div class="field field-state">
+          <label for="state">Status</label>
+          <select id="state" name="state">
+            <option value="">All statuses</option>
+          </select>
+        </div>
+      </form>
+      <p class="list-meta" id="list-meta" aria-live="polite"></p>
+      <div class="list-scroll" id="list-scroll">
+        <ul class="run-list" id="run-list" aria-label="Runs, newest first"></ul>
+        <div class="list-state" id="list-state"></div>
+        <div class="list-footer">
+          <button type="button" class="btn btn-quiet" id="load-more" hidden>Load more</button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="detail" id="detail" tabindex="-1">
+      <div class="detail-inner" id="detail-inner"></div>
+    </main>
+  </div>
+  <div class="visually-hidden" id="announcer" aria-live="polite" aria-atomic="true"></div>
+</body>
+</html>

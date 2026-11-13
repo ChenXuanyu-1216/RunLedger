@@ -525,6 +525,7 @@ function statePanel({ title, body, actions, iconName = "search", bad = false, he
 
 function renderSetup(info) {
   const db = info.database || "the selected path";
+  const quotedDb = "'" + db.replace(/'/g, "''") + "'";
   const missingTable = info.error === "missing_table";
   els.detailInner.replaceChildren(h("section", { class: "state-panel setup" },
     h("p", { class: "eyebrow" }, "Setup needed"),
@@ -534,7 +535,7 @@ function renderSetup(info) {
     h("p", {}, missingTable
       ? "The file exists but RunLedger has not written to it. Record a run with this database, then press Refresh."
       : "Record your first run with the CLI (this creates the database), then press Refresh. The dashboard itself never creates or changes the database."),
-    h("pre", { class: "shell" }, 'python runledger.py run --repo "D:\\path\\to\\your\\project" "Which file starts this app?"'),
+    h("pre", { class: "shell" }, `python runledger.py --db ${quotedDb} run --repo . "Which file starts this app?"`),
     h("p", {}, "Using a different database? Restart the dashboard and point it there:"),
     h("pre", { class: "shell" }, 'python runledger.py dashboard --db "D:\\path\\to\\runs.db"'),
     h("div", { class: "actions" }, h("button", { type: "button", class: "btn", onclick: () => refreshAll() }, icon("refresh"), "Refresh"))));
@@ -796,6 +797,10 @@ let focusDetailOnRoute = false;
 function onRoute() {
   const id = routeId();
   if (id === null) {
+    // Invalidate requests for the run we just left before showing the list.
+    app.detailToken++;
+    app.detailRecord = null;
+    els.detail.removeAttribute("aria-busy");
     app.selectedId = null;
     markSelectedInList();
     setView("list");

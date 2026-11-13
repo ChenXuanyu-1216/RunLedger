@@ -140,7 +140,17 @@ def main():
     resume.add_argument("prompt")
     subs.add_parser("show").add_argument("id", type=int)
     subs.add_parser("list").add_argument("--search", default="")
+    dash = subs.add_parser("dashboard", help="browse saved runs in a local read-only web page")
+    dash.add_argument("--db", dest="dashboard_db", type=Path, metavar="PATH",
+                      help="database to read (overrides the global --db)")
+    dash.add_argument("--host", default="127.0.0.1")
+    dash.add_argument("--port", type=int, default=8765)
+    dash.add_argument("--no-browser", action="store_true", help="only print the URL")
     args = cli.parse_args()
+    if args.action == "dashboard":  # Read-only: must not create the database via connect().
+        import runledger_dashboard
+        return runledger_dashboard.serve(args.dashboard_db or args.db, args.host, args.port,
+                                         not args.no_browser)
     db = connect(args.db)
     try:
         if args.action == "list":
